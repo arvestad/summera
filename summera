@@ -6,23 +6,44 @@ import argparse
 
 def count_points(h, show_points=False):
     points = 0
+    fraga_points = 0
+    fraga_number = 1
     line_no=0
+    grade_info = {'A': 0, 'B': 0, 'C': 0, 'D': 0, 'E': 0}
+    
     for line in h:
         line_no += 1
         match_fraga = re.search(r"^\s*\\fraga.*", line)
         match_point = re.search(r"(\\poang|\\points)\{(\d+)\}", line)
 
         if match_fraga and show_points:
-            print('Fråga')
+            if fraga_points:
+                print(f'\t\tAssignment points: {fraga_points}')
+                fraga_points = 0
+            print('Assignment', fraga_number)
+            fraga_number += 1
         elif match_point:
             p = match_point.group(2)  # Extract the points substring
             try:
-                points += int(p)
+                partial_p = int(p)
+                points += partial_p
+                fraga_points += partial_p
+
+                match_grade  = re.search(r"(\\poang|\\points)\{\d+\}\s*\%\s*([AaBbCcDdEe])", line)
+                if match_grade:
+                    grade = match_grade[2].upper()
+                    grade_info[grade] += partial_p
+                
                 if show_points:
                     print(f'Line {line_no}:{p:>3}')
             except Exception as e:
                 print('Could not parse points on line', line_no, ' in input:\n', line, '\n', e, file=sys.stderr)
-    return points
+
+
+    if match_fraga and show_points:
+        if fraga_points:
+            print(f'\t\tAssignment points: {fraga_points}')
+    return points, grade_info
 
 def main():
     parser = argparse.ArgumentParser()
@@ -31,8 +52,11 @@ def main():
                         help='Show all points as they are found.')
     args= parser.parse_args()
 
-    x = count_points(args.infile, args.verbose)
-    print(x)
+    total, grade_info = count_points(args.infile, args.verbose)
+    print('Exam total:', total)
+    print('\nGrade Points (%)')
+    for grade, points in grade_info.items():
+        print(f'{grade}  {points:4} ({100*points/total:3})')
 
 
 if __name__ == '__main__':
