@@ -54,9 +54,9 @@ def main():
 
     total, grade_info = count_points(args.infile, args.verbose)
     print('Exam total:', total)
-    print('\nGrade Points (%)')
+    print('\nGrade  Points (%)')
     for grade, points in grade_info.items():
-        print(f'{grade}  {points:4} ({100*points/total:3})')
+        print(f'{grade:^6} {points:4} ({100*points/total:4.1f})')
 
 
 if __name__ == '__main__':
