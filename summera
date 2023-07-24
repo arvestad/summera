@@ -14,7 +14,7 @@ def count_points(h, show_points=False):
     for line in h:
         line_no += 1
         match_fraga = re.search(r"^\s*\\fraga.*", line)
-        match_point = re.search(r"(\\poang|\\points)\{(\d+)\}", line)
+        match_point = re.search(r"^[^%]*(\\poang|\\points)\{(\d+)\}", line)
 
         if match_fraga and show_points:
             if fraga_points:
