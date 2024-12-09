@@ -47,7 +47,7 @@ def count_points(h, show_points=False):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('infile', type=argparse.FileType('r'), help='A LaTeX file containing  macros like "\poang{2}".')
+    parser.add_argument('infile', type=argparse.FileType('r'), help='A LaTeX file containing  macros like "\\poang{2}".')
     parser.add_argument('-v', '--verbose', action='store_true',
                         help='Show all points as they are found.')
     args= parser.parse_args()
